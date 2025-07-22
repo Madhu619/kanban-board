@@ -1,3 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
+# Project: Kanban Style Issue Board
+# Description: This is a React + TypeScript application for managing issues in a kanban board style.
 User-agent: *
 Disallow:
