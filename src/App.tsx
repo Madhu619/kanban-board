@@ -1,20 +1,22 @@
-import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import DummyComponent from "./components/DummyComponent/DummyComponent";
+import Home from "./components/Home/Home";
 import Footer from "./components/Footer/Footer";
 import "./App.css";
+import BoardView from "./pages/BoardView";
 
 function App() {
   return (
-    <div className="App" data-testid="App">
-      <Navbar />
-      <h1>
-        {" "}
-        Let's build a Kanban-Style Issue Board with React and TypeScript!{" "}
-      </h1>
-      <DummyComponent />
-      <Footer />
-    </div>
+    <Router>
+      <div className="App" data-testid="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/board" element={<BoardView />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

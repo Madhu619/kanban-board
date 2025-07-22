@@ -1,0 +1,40 @@
+.board-column-label {
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.2em;
+  margin-bottom: 18px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #205081;
+  background: rgba(240, 245, 255, 0.85);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(32, 80, 129, 0.10), 0 0 32px 8px rgba(180, 200, 230, 0.12);
+  z-index: 2;
+  overflow: visible;
+}
+
+.board-column-label::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(ellipse at center, rgba(180,200,230,0.18) 0%, rgba(240,245,255,0.01) 80%);
+  filter: blur(8px);
+  z-index: -1;
+  border-radius: 24px;
+}
+.board-column {
+  background: rgba(240, 245, 255, 0.75);
+  border-radius: 20px;
+  box-shadow: 0 2px 16px 0 rgba(32, 80, 129, 0.06);
+  padding: 18px 12px 24px 12px;
+  margin: 0 8px;
+  min-width: 280px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}

@@ -1,1 +1,42 @@
-{}
+[
+  {
+    "id": "1",
+    "title": "Set up project structure",
+    "description": "Initialize the Kanban board project with React and TypeScript.",
+    "status": "backlog",
+    "author": "Madhusudhana RK",
+    "priority": "high",
+    "createdAt": "2025-07-20T10:00:00Z",
+    "assignee": "Alice"
+  },
+  {
+    "id": "2",
+    "title": "Create Board UI",
+    "description": "Design the board view with columns for Backlog, In Progress, and Done.",
+    "status": "in-progress",
+    "author": "Alice",
+    "priority": "medium",
+    "createdAt": "2025-07-21T09:30:00Z",
+    "assignee": "Bob"
+  },
+  {
+    "id": "3",
+    "title": "Implement drag & drop",
+    "description": "Allow issues to be moved between columns via drag and drop.",
+    "status": "backlog",
+    "author": "Bob",
+    "priority": "low",
+    "createdAt": "2025-07-21T12:00:00Z",
+    "assignee": "Madhusudhana RK"
+  },
+  {
+    "id": "4",
+    "title": "Add undo feature",
+    "description": "Allow users to undo issue moves within 5 seconds.",
+    "status": "done",
+    "author": "Madhusudhana RK",
+    "priority": "medium",
+    "createdAt": "2025-07-22T08:00:00Z",
+    "assignee": "Alice"
+  }
+]

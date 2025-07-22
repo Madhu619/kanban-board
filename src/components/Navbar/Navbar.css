@@ -1,5 +1,41 @@
+/* Added the Sticky Navbar - Links, Hover and other Effects */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px #0001;
   background: #1976d2;
   color: white;
   padding: 1rem;
+}
+.navbar-links {
+  margin-top: 0.5rem;
+   display: flex;
+  gap: 20px;
+}
+.navbar-link {
+  color: #fff;
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.navbar-logo {
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-right: 32px;
+  letter-spacing: 1px;
+}
+
+.navbar-link:hover {
+  color: #1976d2;
+}
+.navbar-link:last-child {
+  margin-right: 0;
 }
