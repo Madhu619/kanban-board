@@ -1,12 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Task, TaskStatus, ToastType, TOAST_MAP } from "../types";
+import { Task, TaskStatus, ToastType } from "../types";
 import issuesData from "../data/issues.json";
 import Toast from "../components/Toast/Toast";
-import BoardIssue from "../components/BoardIssue/BoardCard";
+import BoardCard from "../components/BoardCard/BoardCard";
 import BoardColumn from "../components/BoardColumn/BoardColumn";
+import BoardControls from "../components/BoardControls/BoardControls";
+import { withAuth } from "../auth/withAuth";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import "./BoardView.css";
+import {
+  getAssignees,
+  filterAndSortIssues,
+  moveIssue as moveIssueLogic,
+  getUserRole,
+} from "../utils/boardLogic";
 
 const statusColumns = [
   { key: TaskStatus.BACKLOG, label: "Backlog" },
@@ -14,7 +22,15 @@ const statusColumns = [
   { key: TaskStatus.DONE, label: "Done" },
 ];
 
-const BoardView: React.FC = () => {
+interface BoardViewProps {
+  username?: string;
+}
+
+const BoardView: React.FC<BoardViewProps> = ({ username }) => {
+  const currentUsername =
+    username || localStorage.getItem("kanban-username") || "guest";
+  const role = getUserRole(currentUsername || "guest");
+  const isReadOnly = role === "contributor";
   const [issues, setIssues] = useState<Task[]>([]);
   const [pending, setPending] = useState<{
     id: string;
@@ -24,8 +40,13 @@ const BoardView: React.FC = () => {
   const [showUndo, setShowUndo] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: ToastType }>({
     message: "",
-    type: "info",
+    type: "info" as ToastType,
   });
+  // State for search, filter, and sort
+  // Live search by title/tags, filter by assignee/severity, sort by score
+  const [search, setSearch] = useState("");
+  const [assignee, setAssignee] = useState<string | "ALL">("ALL");
+  const [sort, setSort] = useState<"score-high" | "score-low">("score-high");
   const undoTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -39,24 +60,20 @@ const BoardView: React.FC = () => {
   }, []);
 
   const moveIssue = (id: string, newStatus: TaskStatus) => {
-    setIssues((prev) => {
-      const issue = prev.find((i) => i.id === id);
-      if (!issue || issue.status === newStatus) return prev;
-      setPending({ id, prevStatus: issue.status, newStatus });
-      setShowUndo(true);
-      // Use mapping for toast
-      const toastData = TOAST_MAP[newStatus] || {
-        message: "Issue moved!",
-        type: "info",
-      };
-      setToast(toastData);
-      // Optimistically update
-      return prev.map((i) => (i.id === id ? { ...i, status: newStatus } : i));
-    });
-    // Simulate async save
+    setIssues((prev) =>
+      moveIssueLogic(prev, id, newStatus, setPending, setShowUndo, (toastObj) =>
+        setToast({
+          message: toastObj.message,
+          type:
+            typeof toastObj.type === "string"
+              ? (toastObj.type as ToastType)
+              : toastObj.type,
+        })
+      )
+    );
+    // async save wait upto 5 seconds
     if (undoTimeout.current) clearTimeout(undoTimeout.current);
     undoTimeout.current = setTimeout(() => {
-      /** this section is under testing ... RK-Madhu */
       //setPending(null);
       //setShowUndo(false);
     }, 5000);
@@ -83,24 +100,59 @@ const BoardView: React.FC = () => {
     }
   };
 
+  // Use generic business logic helpers
+  const assignees = getAssignees(issues);
+  // Filter and sort issues based on search, assignee, and sort criteria
+  const filteredIssues = filterAndSortIssues(
+    issues,
+    search,
+    assignee,
+    "ALL"
+  ).sort((a, b) => {
+    const scoreDiff =
+      sort === "score-high"
+        ? (b.priorityScore ?? 0) - (a.priorityScore ?? 0)
+        : (a.priorityScore ?? 0) - (b.priorityScore ?? 0);
+    if (scoreDiff !== 0) return scoreDiff;
+    // If scores match, newer issues first
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
   return (
     <DndProvider backend={HTML5Backend}>
+      <BoardControls
+        search={search}
+        setSearch={setSearch}
+        assignee={assignee}
+        setAssignee={setAssignee}
+        sort={sort}
+        setSort={setSort}
+        statusColumns={statusColumns}
+        assignees={assignees}
+      />
       <div className="board-view">
         {statusColumns.map((col) => (
           <BoardColumn
             key={col.key}
             status={col.key}
             label={col.label}
-            issues={issues.filter((issue) => issue.status === col.key)}
-            onDropIssue={(id) => handleDrop(id, col.key)}
+            issues={filteredIssues.filter((issue) => issue.status === col.key)}
+            onDropIssue={
+              isReadOnly ? () => {} : (id) => handleDrop(id, col.key)
+            }
           >
-            {issues
+            {filteredIssues
               .filter((issue) => issue.status === col.key)
               .map((issue) => (
-                <BoardIssue
+                <BoardCard
                   key={issue.id}
                   issue={issue}
-                  onMove={(status) => handleMove(issue.id, status)}
+                  onMove={
+                    isReadOnly
+                      ? undefined
+                      : (status) => handleMove(issue.id, status)
+                  }
+                  isReadOnly={isReadOnly}
                 />
               ))}
           </BoardColumn>
@@ -118,4 +170,4 @@ const BoardView: React.FC = () => {
   );
 };
 
-export default BoardView;
+export default withAuth(BoardView, "/board");

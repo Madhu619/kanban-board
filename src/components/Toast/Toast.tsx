@@ -1,11 +1,12 @@
 import React from "react";
+import { ToastType } from "../../types";
 import "./Toast.css";
 
 interface ToastProps {
   message: string;
   actionLabel?: string;
   onAction?: () => void;
-  type?: "success" | "error" | "info" | "warning";
+  type?: ToastType;
 }
 
 const Toast: React.FC<ToastProps> = ({

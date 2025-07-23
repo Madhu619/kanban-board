@@ -33,8 +33,11 @@ type Task = {
   assignee?: User | string;
   author?: string;
   priority?: TaskPriority | string;
+  severity?: number;
   createdAt: Date;
   updatedAt: Date;
+  userDefinedRank?: number;
+  priorityScore?: number;
 };
 
 // Board type
@@ -77,6 +80,22 @@ export const TOAST_MAP: Record<
   [TaskStatus.DONE]: { message: "Marked as Done!", type: "success" },
 };
 
+// Static user roles and page permissions for role-based access
+const USER_ROLES: Record<string, "admin" | "contributor" | "guest"> = {
+  madhu: "admin",
+  alice: "admin",
+  bob: "contributor",
+  guest: "guest",
+};
+
+const PAGE_PERMISSIONS: Record<
+  string,
+  Array<"admin" | "contributor" | "guest">
+> = {
+  "/board": ["admin", "contributor"],
+  "/issue": ["admin", "contributor"],
+};
+
 // Exporting types for use in other parts of the application
-export { TaskStatus, TaskPriority, UserRoleEnum };
+export { TaskStatus, TaskPriority, UserRoleEnum, USER_ROLES, PAGE_PERMISSIONS };
 export type { User, UserRole, Task, Board, KanbanBoard, ToastType };
