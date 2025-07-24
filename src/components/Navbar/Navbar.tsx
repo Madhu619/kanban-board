@@ -1,12 +1,13 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import { useUser } from "../../constants/currentUser";
 
 const Navbar: React.FC = () => {
+  const { username, setUsername } = useUser();
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("kanban-username");
-    localStorage.removeItem("kanban-recent-issues");
+    setUsername("");
     navigate("/");
   };
   return (
@@ -20,7 +21,7 @@ const Navbar: React.FC = () => {
           <Link to="/board" className="navbar-link">
             Board
           </Link>
-          {localStorage.getItem("kanban-username") && (
+          {username && (
             <button
               className="navbar-link navbar-logout"
               onClick={handleLogout}

@@ -1,8 +1,7 @@
 import React from "react";
-import { Task, TaskStatus } from "../../types";
 import { useDrag } from "react-dnd";
+import { Task, TaskStatus } from "../../types";
 import "./BoardCard.css";
-
 interface CardIssueProps {
   issue: Task;
   onMove?: (status: TaskStatus) => void;
@@ -11,7 +10,15 @@ interface CardIssueProps {
 
 const ITEM_TYPE = "CARD";
 
-// ...existing code...
+/**
+ *
+ * @param issue The issue to display in the card
+ * @param onMove Callback to handle moving the issue to a new status
+ * @param isReadOnly Whether the card is read-only (no drag/drop)
+ * @returns A draggable card component for displaying issues on the board
+ * @author Madhusudhana RK
+ * @date 2025-07-23
+ */
 
 const BoardCard: React.FC<CardIssueProps> = ({ issue, onMove, isReadOnly }) => {
   const [{ isDragging }, drag] = useDrag(
@@ -47,7 +54,6 @@ const BoardCard: React.FC<CardIssueProps> = ({ issue, onMove, isReadOnly }) => {
           : issue.assignee?.name || "-"}
       </div>
       <div className="card-issue-meta">
-        {/* Fallback for button-based movement */}
         {!isReadOnly && (
           <>
             <button

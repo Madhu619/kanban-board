@@ -1,6 +1,6 @@
 // src/utils/boardLogic.ts
 // Generic business logic for Kanban board filtering, searching, and sorting
-import { Task, TaskStatus, TOAST_MAP, USER_ROLES } from "../types";
+import { Task, TaskStatus, TOAST_MAP } from "../types";
 
 export function daysSinceCreated(date: Date): number {
   const now = new Date();
@@ -15,8 +15,8 @@ export function getAssignees(issues: Task[]): string[] {
   return Array.from(
     new Set(
       issues
-        .map((i) => (typeof i.assignee === "string" ? i.assignee : ""))
-        .filter((a): a is string => !!a)
+        .map((item) => (typeof item.assignee === "string" ? item.assignee : ""))
+        .filter((assign): assign is string => !!assign)
     )
   );
 }
@@ -25,8 +25,10 @@ export function getSeverities(issues: Task[]): number[] {
   return Array.from(
     new Set(
       issues
-        .map((i) => (typeof i.severity === "number" ? i.severity : undefined))
-        .filter((s): s is number => typeof s === "number")
+        .map((item) =>
+          typeof item.severity === "number" ? item.severity : undefined
+        )
+        .filter((sever): sever is number => typeof sever === "number")
     )
   );
 }
@@ -87,20 +89,8 @@ export function moveIssue(
     };
     setToast(toastData);
   }
-  // Optimistically update
+  // update the issue status
   return issues.map((item) =>
     item.id === id ? { ...item, status: newStatus } : item
   );
-}
-
-/**
- *
- * @param username current user's username
- * @returns User role based on predefined roles
- */
-export function getUserRole(
-  username: string
-): "admin" | "contributor" | "guest" {
-  console.log("Getting user role for:", username);
-  return USER_ROLES[username?.toLowerCase()] || "guest";
 }

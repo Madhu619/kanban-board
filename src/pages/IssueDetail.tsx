@@ -4,13 +4,21 @@ import "./IssueDetail.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { Task, TaskStatus, UserRoleEnum } from "../types";
 import issuesData from "../data/issues.json";
+import { useUser } from "../constants/currentUser";
 import Toast from "../components/Toast/Toast";
 import Sidebar from "../components/Sidebar/Sidebar";
-import { getUserRole } from "../utils/boardLogic";
+import { getUserRole } from "../utils/boardHelper";
+
+/**
+ *
+ * @returns A component that displays the details of a specific issue
+ * @author Madhusudhana RK
+ * @date 2025-07-23
+ */
 
 const IssueDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const currentUsername = localStorage.getItem("kanban-username") || "guest";
+  const { username: currentUsername } = useUser();
   const role = getUserRole(currentUsername || "guest");
   const navigate = useNavigate();
   const [issue, setIssue] = useState<Task | null>(null);
@@ -32,7 +40,8 @@ const IssueDetail: React.FC = () => {
         ? new Date(currentIssue.updatedAt)
         : new Date(currentIssue.createdAt),
     });
-    // Remove current id from recent issues (so it's not shown while viewing)
+
+    // Remove current id from recent issues, add this only when new issue is loaded
     const stored = localStorage.getItem("kanban-recent-issues");
     let recent: { id: string; title: string }[] = stored
       ? JSON.parse(stored)
@@ -51,11 +60,11 @@ const IssueDetail: React.FC = () => {
       let recent: { id: string; title: string }[] = stored
         ? JSON.parse(stored)
         : [];
-      // Remove if already present
+
       recent = recent.filter((i) => i.id !== currentIssue.id);
-      // Add to front
+
       recent.unshift({ id: currentIssue.id, title: currentIssue.title });
-      // Limit to last 5
+
       if (recent.length > 6) recent = recent.slice(0, 6);
       localStorage.setItem("kanban-recent-issues", JSON.stringify(recent));
     };

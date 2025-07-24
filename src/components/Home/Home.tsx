@@ -1,16 +1,17 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../constants/currentUser";
 import "./Home.css";
 
 const Home: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const loginUser = localStorage.getItem("kanban-username");
+  const [input, setInput] = useState("");
+  const { username, setUsername } = useUser();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim()) {
-      localStorage.setItem("kanban-username", username.trim());
+    if (input.trim()) {
+      setUsername(input.trim());
       navigate("/board");
     }
   };
@@ -75,7 +76,7 @@ const Home: React.FC = () => {
               use.
             </li>
           </ul>
-          {!loginUser && (
+          {!username && (
             <form onSubmit={handleSubmit} className="home-form">
               <label htmlFor="username" className="home-label">
                 Enter your username:
@@ -83,8 +84,8 @@ const Home: React.FC = () => {
               <input
                 id="username"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 className="home-input"
                 placeholder="madhu, alice, bob, guest..."
               />
