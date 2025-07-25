@@ -1,0 +1,15 @@
+.welcome-message {
+  font-size: 0.98rem;
+  color: var(--color-text-secondary, var(--color-text));
+  margin: 0.5rem 0 0.5rem 0;
+  text-align: center;
+  letter-spacing: -1px;
+}
+  .welcome-message h2 {
+    color: var(--color-primary);
+  }
+  .welcome-message p {
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--color-text-secondary, var(--color-text));
+  }

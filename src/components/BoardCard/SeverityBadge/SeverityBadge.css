@@ -1,0 +1,16 @@
+.severity-badge {
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-left: 0.5em;
+  margin-right: 0.2em;
+  color: #fff;
+  background: #34495e;
+}
+.severity-1 { background: #27ae60; }
+.severity-2 { background: #2ecc71; }
+.severity-3 { background: #f1c40f; }
+.severity-4 { background: #e67e22; }
+.severity-5 { background: #e74c3c; }

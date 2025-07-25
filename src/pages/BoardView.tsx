@@ -62,7 +62,8 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
   // State for search, filter, and sort
   const [search, setSearch] = useState("");
   const [assignee, setAssignee] = useState<string | "ALL">("ALL");
-  const [sort, setSort] = useState<"score-high" | "score-low">("score-high");
+  type SortType = "score-high" | "score-low" | "priority-high" | "priority-low";
+  const [sort, setSort] = useState<SortType>("score-high");
   const undoTimeout = useRef<NodeJS.Timeout | null>(null);
   const [lastSync, setLastSync] = useState<Date>(new Date());
 
@@ -156,27 +157,60 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const assignees = getAssignees(issues);
-  const filteredIssues = filterAndSortIssues(
-    issues,
-    search,
-    assignee,
-    "ALL"
-  ).sort((a, b) => {
-    const scoreDiff =
-      sort === "score-high"
-        ? (b.priorityScore ?? 0) - (a.priorityScore ?? 0)
-        : (a.priorityScore ?? 0) - (b.priorityScore ?? 0);
-    if (scoreDiff !== 0) return scoreDiff;
-    // If scores match, newer issues first
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  // Filter issues for search/assignee only (no sort)
+  const filteredIssues = filterAndSortIssues(issues, search, assignee, "ALL");
+
+  // Paginate per status column, with per-column sorting if needed
+  const paginatedByStatus: Record<string, Task[]> = {};
+  statusColumns.forEach((col) => {
+    let colIssues = filteredIssues.filter((issue) => issue.status === col.key);
+    colIssues = colIssues.slice().sort((a, b) => {
+      const aScore = typeof a.priorityScore === "number" ? a.priorityScore : 0;
+      const bScore = typeof b.priorityScore === "number" ? b.priorityScore : 0;
+      const diff = sort === "score-high" ? bScore - aScore : aScore - bScore;
+      if (diff !== 0) return diff;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+    paginatedByStatus[col.key] = colIssues.slice(
+      (page - 1) * pageSize,
+      page * pageSize
+    );
   });
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredIssues.length / pageSize);
-  const paginatedIssues = filteredIssues.slice(
-    (page - 1) * pageSize,
-    page * pageSize
+  // Calculate total pages based on largest column in the Board View.
+  const totalPages = Math.max(
+    ...statusColumns.map((col) =>
+      Math.ceil(
+        filteredIssues.filter((issue) => issue.status === col.key).length /
+          pageSize
+      )
+    )
   );
+
+  // Debug: Print distribution of priorities across statuses
+  // remove this in production - Madhusudhana RK
+  React.useEffect(() => {
+    if (!issues.length) return;
+    const dist: Record<string, Record<string, number>> = {
+      backlog: { high: 0, medium: 0, low: 0 },
+      "in-progress": { high: 0, medium: 0, low: 0 },
+      done: { high: 0, medium: 0, low: 0 },
+    };
+    issues.forEach((issue) => {
+      const status = String(issue.status).toLowerCase();
+      const priority =
+        typeof issue.priority === "string"
+          ? issue.priority.toLowerCase()
+          : "unknown";
+      if (dist[status] && dist[status][priority] !== undefined) {
+        dist[status][priority]++;
+      }
+    });
+    // eslint-disable-next-line no-console
+    console.log("Priority distribution by status:", dist);
+  }, [issues]);
+
+  console.log("Filtered Issues:", filteredIssues); // remove in production Madhusudhana RK
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -185,7 +219,9 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
         setSearch={setSearch}
         assignee={assignee}
         setAssignee={setAssignee}
-        sort={sort}
+        sort={
+          sort === "score-high" || sort === "score-low" ? sort : "score-high"
+        }
         setSort={setSort}
         statusColumns={statusColumns}
         assignees={assignees}
@@ -197,28 +233,30 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
             Sync Now
           </button>
         </div>
-        <div
-          className="pagination-controls"
-          style={{ textAlign: "center", margin: "1rem 0" }}
-        >
-          <button
-            className="btn"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
+        {totalPages > 1 && filteredIssues.length > 0 && (
+          <div
+            className="pagination-controls"
+            style={{ textAlign: "center", margin: "1rem 0" }}
           >
-            Previous
-          </button>
-          <span style={{ margin: "0 1rem" }}>
-            Page {page} of {totalPages}
-          </span>
-          <button
-            className="btn"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-          >
-            Next
-          </button>
-        </div>
+            <button
+              className="btn"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              Previous
+            </button>
+            <span style={{ margin: "0 1rem" }}>
+              Page {page} of {totalPages}
+            </span>
+            <button
+              className="btn"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
       {loading ? (
         <div className="loading-modal">
@@ -234,27 +272,23 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
               <BoardColumn
                 key={col.key}
                 label={col.label}
-                issues={paginatedIssues.filter(
-                  (issue) => issue.status === col.key
-                )}
+                issues={paginatedByStatus[col.key]}
                 onDropIssue={
                   isReadOnly ? () => {} : (id) => handleDropOrMove(id, col.key)
                 }
               >
-                {paginatedIssues
-                  .filter((issue) => issue.status === col.key)
-                  .map((issue) => (
-                    <BoardCard
-                      key={issue.id}
-                      issue={issue}
-                      onMove={
-                        isReadOnly
-                          ? undefined
-                          : (status) => handleDropOrMove(issue.id, status)
-                      }
-                      isReadOnly={isReadOnly}
-                    />
-                  ))}
+                {paginatedByStatus[col.key].map((issue) => (
+                  <BoardCard
+                    key={issue.id}
+                    issue={issue}
+                    onMove={
+                      isReadOnly
+                        ? undefined
+                        : (status) => handleDropOrMove(issue.id, status)
+                    }
+                    isReadOnly={isReadOnly}
+                  />
+                ))}
               </BoardColumn>
             ))}
           </div>

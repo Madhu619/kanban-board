@@ -1,0 +1,20 @@
+.cta-button {
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  color: var(--color-bg);
+  border: none;
+  border-radius: 4px;
+  padding: 0.75em 2em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--color-shadow, 0 2px 8px rgba(79, 140, 255, 0.15));
+  transition: background 0.2s, box-shadow 0.2s;
+  margin: 1em;
+}
+
+.cta-button:hover,
+.cta-button:focus {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  box-shadow: 0 4px 16px var(--color-shadow, rgba(79, 140, 255, 0.25));
+  outline: none;
+}

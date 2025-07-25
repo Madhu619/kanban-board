@@ -1,0 +1,54 @@
+.footer {
+  background: var(--color-card);
+  color: var(--color-text-secondary, var(--color-text));
+  padding: 1rem;
+  text-align: center;
+  margin-top: auto;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: var(--color-shadow-footer, 0 -2px 8px rgba(32,80,129,0.06));
+  border-top: 1px solid var(--color-border, var(--color-accent));
+  font-size: 0.98rem;
+}
+
+.footer-links {
+  margin-bottom: 0.5rem;
+}
+ .footer-link {
+  color: var(--color-link, var(--color-primary));
+  margin: 0 1.2rem;
+  text-decoration: none;
+  transition: color 0.2s;
+ }
+ .footer-link:hover {
+  color: var(--color-link-hover, var(--color-accent));
+  text-decoration: underline;
+}
+.footer-copy {
+  opacity: 0.8;
+}
+.footer-bottom-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+ .footer-prefer {
+  color: var(--color-text-secondary, var(--color-text));
+  font-size: 0.97rem;
+  opacity: 0.85;
+ }
+ .footer-prefer a {
+  color: var(--color-link, var(--color-primary));
+  text-decoration: none;
+  font-weight: 500;
+ }
+ .footer-prefer a:hover {
+  color: var(--color-link-hover, var(--color-accent));
+  text-decoration: underline;
+}

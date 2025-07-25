@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../constants/currentUser";
+import WelcomeMessage from "./HomeComponents/WelcomeMessage";
+import SubmitButton from "./HomeComponents/SubmitButton";
+import boardIllustration from "./HomeComponents/kanban-illustration.svg";
 import "./Home.css";
 
 const Home: React.FC = () => {
@@ -21,19 +24,10 @@ const Home: React.FC = () => {
       <section className="home-hero">
         <div className="home-hero-bg" />
         <div className="home-hero-content">
-          <h1 className="home-title">
-            <span role="img" aria-label="Kanban">
-              🗂️
-            </span>{" "}
-            Kanban Style Issue Board
-          </h1>
-          <p className="home-subtitle">
-            Organize, prioritize, and track your team's work visually.
-            <br />
-            <span className="home-highlight">
-              Boost productivity with a beautiful, modern board.
-            </span>
-          </p>
+          <WelcomeMessage />
+          <div className="home-illustration">
+            <img src={boardIllustration} alt="Kanban Board Illustration" />
+          </div>
           <ul className="home-features">
             <li>
               <span
@@ -88,10 +82,9 @@ const Home: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 className="home-input"
                 placeholder="madhu, alice, bob, guest..."
+                autoComplete="off"
               />
-              <button type="submit" className="home-btn">
-                Enter
-              </button>
+              <SubmitButton type="submit">Enter</SubmitButton>
             </form>
           )}
         </div>
