@@ -44,7 +44,7 @@
   color: #888;
   font-size: 0.9rem;
   margin-top: 2px;
-  .card-issue-meta-author {
+  .card-issue-meta-author, .card-issue-meta-assignee {
     font-weight: bold;
     color: #1976d2;
   }

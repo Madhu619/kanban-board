@@ -49,9 +49,15 @@ const BoardCard: React.FC<CardIssueProps> = ({ issue, onMove, isReadOnly }) => {
       </div>
       <div className="card-issue-meta">
         Assignee:{" "}
-        {typeof issue.assignee === "string"
-          ? issue.assignee
-          : issue.assignee?.name || "-"}
+        {typeof issue.assignee === "string" ? (
+          <span className="card-issue-meta-assignee">{issue.assignee}</span>
+        ) : issue.assignee && issue.assignee.name ? (
+          <span className="card-issue-meta-assignee">
+            {issue.assignee.name}
+          </span>
+        ) : (
+          "-"
+        )}
       </div>
       <div className="card-issue-meta">
         {!isReadOnly && (

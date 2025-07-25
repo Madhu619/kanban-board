@@ -8,6 +8,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     setUsername("");
+    localStorage.removeItem("kanban-recent-issues");
     navigate("/");
   };
   return (

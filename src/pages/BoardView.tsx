@@ -95,6 +95,11 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
     // eslint-disable-next-line
   }, []);
 
+  // Reset page to 1 when search/filter/sort changes
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, assignee, sort]);
+
   // Polling to fetch issues every 30 seconds
   // This will keep the board updated with any changes
   usePolling(fetchIssues, 30000, []);
@@ -147,6 +152,9 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
     }
   };
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
   const assignees = getAssignees(issues);
   const filteredIssues = filterAndSortIssues(
     issues,
@@ -163,6 +171,13 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredIssues.length / pageSize);
+  const paginatedIssues = filteredIssues.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
   return (
     <DndProvider backend={HTML5Backend}>
       <BoardControls
@@ -175,11 +190,35 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
         statusColumns={statusColumns}
         assignees={assignees}
       />
-      <div className="board-sync-status">
-        Last sync: {lastSync.toLocaleTimeString()} |
-        <button className="btn" onClick={fetchIssues}>
-          Sync Now
-        </button>
+      <div className="board-top-section">
+        <div className="board-sync-status">
+          Last sync: {lastSync.toLocaleTimeString()} |
+          <button className="btn" onClick={fetchIssues}>
+            Sync Now
+          </button>
+        </div>
+        <div
+          className="pagination-controls"
+          style={{ textAlign: "center", margin: "1rem 0" }}
+        >
+          <button
+            className="btn"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
+          <span style={{ margin: "0 1rem" }}>
+            Page {page} of {totalPages}
+          </span>
+          <button
+            className="btn"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
       {loading ? (
         <div className="loading-modal">
@@ -189,35 +228,37 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
       ) : error ? (
         <div className="board-error">{error}</div>
       ) : (
-        <div className="board-view">
-          {statusColumns.map((col) => (
-            <BoardColumn
-              key={col.key}
-              label={col.label}
-              issues={filteredIssues.filter(
-                (issue) => issue.status === col.key
-              )}
-              onDropIssue={
-                isReadOnly ? () => {} : (id) => handleDropOrMove(id, col.key)
-              }
-            >
-              {filteredIssues
-                .filter((issue) => issue.status === col.key)
-                .map((issue) => (
-                  <BoardCard
-                    key={issue.id}
-                    issue={issue}
-                    onMove={
-                      isReadOnly
-                        ? undefined
-                        : (status) => handleDropOrMove(issue.id, status)
-                    }
-                    isReadOnly={isReadOnly}
-                  />
-                ))}
-            </BoardColumn>
-          ))}
-        </div>
+        <>
+          <div className="board-view">
+            {statusColumns.map((col) => (
+              <BoardColumn
+                key={col.key}
+                label={col.label}
+                issues={paginatedIssues.filter(
+                  (issue) => issue.status === col.key
+                )}
+                onDropIssue={
+                  isReadOnly ? () => {} : (id) => handleDropOrMove(id, col.key)
+                }
+              >
+                {paginatedIssues
+                  .filter((issue) => issue.status === col.key)
+                  .map((issue) => (
+                    <BoardCard
+                      key={issue.id}
+                      issue={issue}
+                      onMove={
+                        isReadOnly
+                          ? undefined
+                          : (status) => handleDropOrMove(issue.id, status)
+                      }
+                      isReadOnly={isReadOnly}
+                    />
+                  ))}
+              </BoardColumn>
+            ))}
+          </div>
+        </>
       )}
       {showUndo && pending && (
         <Toast

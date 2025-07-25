@@ -1,5 +1,6 @@
 import { Task, USER_ROLES } from "../types";
 import issuesData from "../data/issues.json";
+import generateMoreIssues from "../data/generateMoreIssues";
 
 // Get issues from localStorage or fallback to issuesData
 export const getPersistedIssues = (): Task[] => {
@@ -18,7 +19,11 @@ export const getPersistedIssues = (): Task[] => {
       );
     }
   }
-  return (issuesData as any[]).map((item) => ({
+
+  // Let's fetch more data and test scalability
+  const moreIssues = generateMoreIssues(1000);
+
+  return (moreIssues as any[]).map((item) => ({
     ...item,
     createdAt: new Date(item.createdAt),
     updatedAt: new Date(item.updatedAt || item.createdAt),
