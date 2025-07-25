@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+import { ThemeProvider } from "./theme/ThemeContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Home/Home";
@@ -26,17 +27,19 @@ function AppRoutes() {
 }
 function App() {
   return (
-    <Router>
-      <div className="App" data-testid="App">
-        <Navbar />
-        <div className="main-layout">
-          <div className="main-content">
-            <AppRoutes />
+    <ThemeProvider>
+      <Router>
+        <div className="App" data-testid="App">
+          <Navbar />
+          <div className="main-layout">
+            <div className="main-content">
+              <AppRoutes />
+            </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 

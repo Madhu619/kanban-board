@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { ToastType } from "../../types";
+import ToastContent from "./ToastComponents/ToastContent";
+import CloseButton from "./ToastComponents/CloseButton";
+import Animation from "./ToastComponents/Animation";
 import "./Toast.css";
 
 interface ToastProps {
@@ -26,15 +29,23 @@ const Toast: React.FC<ToastProps> = ({
   onAction,
   type = "info",
 }) => {
+  const [visible, setVisible] = useState(true);
+  if (!visible) return null;
+
+  const handleClose = () => setVisible(false);
+
   return (
-    <div className={`toast toast-${type}`} role="alert">
-      <span>{message}</span> |
-      {actionLabel && onAction && (
-        <button className="toast-action" onClick={onAction}>
-          {actionLabel}
-        </button>
-      )}
-    </div>
+    <Animation>
+      <div className={`toast toast-${type}`} role="alert">
+        <ToastContent message={message} />
+        {actionLabel && onAction && (
+          <button className="toast-action" onClick={onAction}>
+            {actionLabel}
+          </button>
+        )}
+        <CloseButton onClick={handleClose} />
+      </div>
+    </Animation>
   );
 };
 

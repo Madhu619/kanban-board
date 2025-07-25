@@ -3,7 +3,7 @@ import { withAuth } from "../auth/withAuth";
 import "./IssueDetail.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { Task, TaskStatus, UserRoleEnum } from "../types";
-import issuesData from "../data/issues.json";
+import { getPersistedIssues } from "../utils/boardHelper";
 import { useUser } from "../constants/currentUser";
 import Toast from "../components/Toast/Toast";
 import Sidebar from "../components/Sidebar/Sidebar";
@@ -27,7 +27,8 @@ const IssueDetail: React.FC = () => {
   );
 
   useEffect(() => {
-    const currentIssue = (issuesData as any[]).find((i) => i.id === id);
+    const issues = getPersistedIssues();
+    const currentIssue = (issues as any[]).find((i) => i.id === id);
     if (!currentIssue) {
       setIssue(null);
       return;
@@ -47,7 +48,6 @@ const IssueDetail: React.FC = () => {
       ? JSON.parse(stored)
       : [];
     recent = recent.filter((i) => i.id !== currentIssue.id);
-    console.log("Updated recent issues:", recent);
     localStorage.setItem(
       "kanban-recent-issues",
       JSON.stringify(recent.slice(0, 5))

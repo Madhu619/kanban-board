@@ -1,7 +1,7 @@
 .card-issue {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 6px;
-  box-shadow: 0 1px 4px #0001;
+  box-shadow: var(--color-shadow, 0 1px 4px #0001);
   padding: 12px 16px;
   margin-bottom: 8px;
   display: flex;
@@ -17,16 +17,17 @@
   width: 100px;
   right: 16px;
   bottom: 16px;
-  background: #1976d2;
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-bg);
   padding: 6px 14px;
   border-radius: 4px;
   text-decoration: none;
-  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.12);
+  box-shadow: var(--color-shadow, 0 1px 4px rgba(25, 118, 210, 0.12));
   transition: background 0.2s;
 }
 .card-issue-link:hover {
-  background: #1565c0;
+  background: var(--color-primary);
+  color: var(--color-bg);
 }
 .card-issue:hover {
   box-shadow: 0 4px 16px #0002;
@@ -35,45 +36,123 @@
   font-weight: bold;
   font-size: 1.1rem;
   margin-bottom: 4px;
+  flex: 1;
+  color: var(--color-primary);
 }
 .card-issue-desc {
-  color: #555;
-  font-size: 0.97rem;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 .card-issue-meta {
   color: #888;
   font-size: 0.9rem;
   margin-top: 2px;
-  .card-issue-meta-author {
-    font-weight: bold;
-    color: #1976d2;
+}
+.card-issue-meta-author, .card-issue-meta-assignee {
+  font-weight: bold;
+  color: var(--color-accent);
+}
+.card-issue-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+  justify-content: space-between;
+}
+.card-issue-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 6px;
+  box-shadow: 0 1px 4px #1976d233;
+}
+.card-issue-priority-low {
+  background: var(--color-bg-secondary);
+  color: var(--color-accent);
+}
+.card-issue-priority-medium {
+  background: #fffde7;
+  color: #fbc02d;
+}
+.card-issue-priority-high {
+  background: #ffebee;
+  color: #d32f2f;
+}
+.card-issue-severity {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+.card-issue-meta-row {
+  display: flex;
+  gap: 24px;
+  margin-top: 2px;
+}
+.card-issue-meta {
+  color: #888;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-issue-meta-label {
+  font-weight: 500;
+  color: #1976d2;
+}
+.card-issue-avatar {
+  width: 28px;
+  height: 28px;
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px #1976d233;
+}
+.card-issue-controls {
+  display: flex;
+  gap: 8px;
+  margin: 6px;
+}
+@media (max-width: 600px) {
+  .card-issue-meta-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .card-issue-controls {
+    flex-direction: column;
+    gap: 4px;
   }
 }
 
-.card-issue-meta button {
-  background: #fff;
-  color: #1976d2;
-  border: 1.5px solid #1976d2;
+.card-issue-controls button {
+  background: var(--color-card);
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-accent);
   border-radius: 8px;
   padding: 7px 18px;
-  margin: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   box-shadow: 0 1px 4px #1976d233;
 }
-.card-issue-meta button:disabled {
-  background: #e3f2fd;
+.card-issue-controls button:disabled {
+  background: var(--color-bg-secondary);
   color: #b0bec5;
   border-color: #b0bec5;
   cursor: not-allowed;
   opacity: 0.7;
 }
-.card-issue-meta button:not(:disabled):hover {
-  background: #1976d2;
-  color: #fff;
-  border-color: #1565c0;
+.card-issue-controls button:not(:disabled):hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-primary);
 }
 
 .card-issue-link-container {

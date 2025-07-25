@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDrop } from "react-dnd";
-import { Task, TaskStatus } from "../../types";
+import { Task } from "../../types";
+import BoardColumnHeader from "./BoardColumnHeader/BoardColumnHeader";
 import "./BoardColumn.css";
 
 const ITEM_TYPE = "CARD";
@@ -10,6 +11,7 @@ interface BoardColumnProps {
   issues: Task[];
   onDropIssue: (id: string) => void;
   children: React.ReactNode;
+  color?: string;
 }
 
 /**
@@ -29,12 +31,19 @@ const BoardColumn: React.FC<BoardColumnProps> = ({
   issues,
   onDropIssue,
   children,
+  color = "#f7fafd",
 }) => {
+  const [isOver, setIsOver] = useState(false);
   const [, drop] = useDrop(
     () => ({
       accept: ITEM_TYPE,
       drop: (item: { id: string }) => {
         onDropIssue(item.id);
+      },
+      hover: () => setIsOver(true),
+      collect: (monitor) => {
+        if (!monitor.isOver()) setIsOver(false);
+        return {};
       },
     }),
     [onDropIssue]
@@ -43,9 +52,9 @@ const BoardColumn: React.FC<BoardColumnProps> = ({
   return (
     <div
       ref={drop as unknown as React.Ref<HTMLDivElement>}
-      className="board-column"
+      className={`board-column${isOver ? " board-column-drag-over" : ""}`}
     >
-      <h2 className="board-column-label">{label}</h2>
+      <BoardColumnHeader label={label} />
       {issues.length === 0 && <p style={{ color: "#888" }}>No issues</p>}
       {children}
     </div>

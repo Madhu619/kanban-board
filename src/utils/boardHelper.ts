@@ -1,5 +1,7 @@
 import { Task, USER_ROLES } from "../types";
 import issuesData from "../data/issues.json";
+// use below for more issues
+//import generateMoreIssues from "../data/generateMoreIssues";
 
 // Get issues from localStorage or fallback to issuesData
 export const getPersistedIssues = (): Task[] => {
@@ -18,6 +20,10 @@ export const getPersistedIssues = (): Task[] => {
       );
     }
   }
+
+  // Let's fetch more data and test scalability - Madhu RK
+  //const moreIssues = generateMoreIssues(1000);
+
   return (issuesData as any[]).map((item) => ({
     ...item,
     createdAt: new Date(item.createdAt),
@@ -49,6 +55,5 @@ export const persistIssues = (issues: Task[]) => {
 export function getUserRole(
   username: string
 ): "admin" | "contributor" | "guest" {
-  console.log("Getting user role for:", username);
   return USER_ROLES[username?.toLowerCase()] || "guest";
 }

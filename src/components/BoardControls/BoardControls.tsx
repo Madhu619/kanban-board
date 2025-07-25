@@ -81,22 +81,14 @@ const BoardControls: React.FC<BoardControlsProps> = ({
           event.preventDefault();
           setSort(sort === "score-high" ? "score-low" : "score-high");
         }}
-        title={
-          sort === "score-high"
-            ? "Sort by Priority: High to Low"
-            : "Sort by Priority: Low to High"
-        }
-        aria-label={
-          sort === "score-high"
-            ? "Sort by Priority: High to Low"
-            : "Sort by Priority: Low to High"
-        }
+        title={sort === "score-high" ? "High to Low" : "Low to High"}
+        aria-label={sort === "score-high" ? "High to Low" : "Low to High"}
       >
         <span className="board-sort-arrow" aria-hidden="true">
           {sort === "score-high" ? "↑" : "↓"}
         </span>
         <span className="board-sort-label">
-          Sort by Priority Score
+          Sort by
           {sort === "score-high" ? " (High → Low)" : " (Low → High)"}
         </span>
       </button>

@@ -2,6 +2,10 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { Task, TaskStatus } from "../../types";
 import "./BoardCard.css";
+import PriorityBadge from "./PriorityBadge/PriorityBadge";
+import SeverityBadge from "./SeverityBadge/SeverityBadge";
+import AssigneeAvatar from "./AssigneeAvatar/AssigneeAvatar";
+
 interface CardIssueProps {
   issue: Task;
   onMove?: (status: TaskStatus) => void;
@@ -37,23 +41,51 @@ const BoardCard: React.FC<CardIssueProps> = ({ issue, onMove, isReadOnly }) => {
       ref={
         isReadOnly ? undefined : (drag as unknown as React.Ref<HTMLDivElement>)
       }
-      className="card-issue"
+      className={`card-issue${isDragging ? " dragging" : ""}`}
       style={{ opacity: isDragging ? 0.5 : 1 }}
+      tabIndex={0}
     >
-      <div className="card-issue-title">{issue.title}</div>
+      <div className="card-issue-header">
+        <div className="card-issue-title">{issue.title}</div>
+        {issue.priority && <PriorityBadge priority={String(issue.priority)} />}
+        {typeof issue.severity === "number" && (
+          <SeverityBadge severity={issue.severity} />
+        )}
+      </div>
       <div className="card-issue-desc">{issue.description}</div>
-      <div className="card-issue-meta">
-        Author:{" "}
-        <span className="card-issue-meta-author"> {issue.author || "-"} </span>|
-        Priority: {issue.priority || "-"}
+      <div className="card-issue-meta-row">
+        <div className="card-issue-meta">
+          <span className="card-issue-avatar" title={issue.author}>
+            {issue.author ? issue.author[0].toUpperCase() : "-"}
+          </span>
+          <span className="card-issue-meta-label">Author:</span>
+          <span className="card-issue-meta-author">{issue.author || "-"}</span>
+        </div>
+        <div className="card-issue-meta">
+          <AssigneeAvatar
+            assignee={
+              typeof issue.assignee === "string"
+                ? issue.assignee
+                : issue.assignee &&
+                  typeof issue.assignee === "object" &&
+                  issue.assignee.name
+                ? issue.assignee.name
+                : "-"
+            }
+          />
+          <span className="card-issue-meta-label">Assignee:</span>
+          <span className="card-issue-meta-assignee">
+            {typeof issue.assignee === "string"
+              ? issue.assignee
+              : issue.assignee &&
+                typeof issue.assignee === "object" &&
+                issue.assignee.name
+              ? issue.assignee.name
+              : "-"}
+          </span>
+        </div>
       </div>
-      <div className="card-issue-meta">
-        Assignee:{" "}
-        {typeof issue.assignee === "string"
-          ? issue.assignee
-          : issue.assignee?.name || "-"}
-      </div>
-      <div className="card-issue-meta">
+      <div className="card-issue-controls">
         {!isReadOnly && (
           <>
             <button
@@ -91,7 +123,7 @@ const BoardCard: React.FC<CardIssueProps> = ({ issue, onMove, isReadOnly }) => {
       </div>
       <div className="card-issue-link-container">
         <a href={`/issue/${issue.id}`} className="card-issue-link">
-          View Issue &gt;
+          {"View Issue >"}
         </a>
       </div>
     </div>
