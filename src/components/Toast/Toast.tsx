@@ -14,10 +14,10 @@ interface ToastProps {
 
 /**
  *
- * @param param0.message The message to display in the toast
- * @param param0.actionLabel Optional label for an action button
- * @param param0.onAction Optional callback for the action button
- * @param param0.type The type of toast (info, success, error, warning)
+ * @param message The message to display in the toast
+ * @param actionLabel Optional label for an action button
+ * @param onAction Optional callback for the action button
+ * @param type The type of toast (info, success, error, warning)
  * @returns A styled toast component that displays a message and an optional action button
  * @author Madhusudhana RK
  * @date 2025-07-23

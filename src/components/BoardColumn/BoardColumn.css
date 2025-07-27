@@ -45,10 +45,8 @@
   border: 2px solid var(--color-accent, #4f8cff);
 }
 
-/* Sticky header for BoardColumnHeader */
+/* Non-Sticky header for BoardColumnHeader */
 .board-column-header-sticky {
-  position: sticky;
-  top: 0;
   z-index: 2;
   background: inherit;
   padding: 0.75rem 1rem;

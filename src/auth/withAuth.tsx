@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { PAGE_PERMISSIONS } from "../types";
+import { PAGE_PERMISSIONS, UserRole } from "../types";
 import { getUserRole } from "../utils/boardHelper";
 import { useUser } from "../constants/currentUser";
 

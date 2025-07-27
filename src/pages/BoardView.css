@@ -50,6 +50,7 @@
   justify-content: space-evenly;
   background: var(--color-bg-secondary);
   padding: 10px 20px;
+  margin-top: 16px;
 }
 
 .board-sync-status {

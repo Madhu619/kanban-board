@@ -2,7 +2,8 @@
     display: flex;
     gap: 16px;
     align-items: center;
-    margin: 24px 12px;
+    padding: 24px 12px;
+    background: var(--color-bg-secondary);
 }
 
 .board-search-input {

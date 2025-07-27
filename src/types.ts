@@ -83,8 +83,8 @@ export const TOAST_MAP: Record<
 // Static user roles and page permissions for role-based access
 const USER_ROLES: Record<string, "admin" | "contributor" | "guest"> = {
   madhu: "admin",
-  alice: "admin",
-  bob: "contributor",
+  samanvi: "admin",
+  sony: "contributor",
   guest: "guest",
 };
 

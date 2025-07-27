@@ -101,8 +101,9 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
     setPage(1);
   }, [search, assignee, sort]);
 
-  // Polling to fetch issues every 30 seconds
+  // Polling to fetch issues every 30 seconds - More the time, more issues can be seen.
   // This will keep the board updated with any changes
+  // Comment below line in case of debugging or testing
   usePolling(fetchIssues, 30000, []);
 
   const moveIssue = (id: string, newStatus: TaskStatus) => {
@@ -153,7 +154,7 @@ const BoardView: React.FC<BoardViewProps> = ({ username }) => {
     }
   };
 
-  // Pagination state
+  // Pagination state /** Form here to line 188 works only when the total issues > 10 */
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const assignees = getAssignees(issues);

@@ -8,7 +8,7 @@
 .main-content {
   flex: 1;
   min-width: 0;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg);
   color: var(--color-text);
 }
 .App {

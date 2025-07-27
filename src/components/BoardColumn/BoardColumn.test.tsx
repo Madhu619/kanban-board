@@ -1,5 +1,5 @@
 // Mock react-dnd to avoid ESM import errors in Jest
-jest.mock('react-dnd', () => ({
+jest.mock("react-dnd", () => ({
   useDrop: () => [null, () => {}],
 }));
 import React from "react";
@@ -14,9 +14,9 @@ describe("Test cases for BoardColumn component", () => {
     title: "Test Issue",
     description: "Test Description",
     status: TaskStatus.BACKLOG,
-    author: "Alice",
+    author: "Samanvi",
     priority: "High",
-    assignee: "Bob",
+    assignee: "Sony",
     createdAt: new Date(),
     updatedAt: new Date(),
   };

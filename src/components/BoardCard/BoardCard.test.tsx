@@ -14,9 +14,9 @@ describe("BoardCard", () => {
     title: "Test Issue",
     description: "Test Description",
     status: TaskStatus.BACKLOG,
-    author: "Alice",
+    author: "Samanvi",
     priority: "High",
-    assignee: "Bob",
+    assignee: "Sony",
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -25,9 +25,9 @@ describe("BoardCard", () => {
     render(<BoardCard issue={baseIssue} />);
     expect(screen.getByText(/Test Issue/i)).toBeInTheDocument();
     expect(screen.getByText(/Test Description/i)).toBeInTheDocument();
-    expect(screen.getByText(/Alice/i)).toBeInTheDocument();
+    expect(screen.getByText(/Samanvi/i)).toBeInTheDocument();
     expect(screen.getByText(/High/i)).toBeInTheDocument();
-    expect(screen.getByText(/Bob/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sony/i)).toBeInTheDocument();
     expect(screen.getByText(/View Issue/i)).toBeInTheDocument();
   });
 

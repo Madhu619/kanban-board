@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+enum Theme {
+  Light = "light",
+  Dark = "dark",
+}
+
 interface ThemeContextType {
-  theme: "light" | "dark";
+  theme: Theme;
   toggleTheme: () => void;
 }
 
@@ -10,17 +15,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem("kanban-theme");
-    return stored === "dark" ? "dark" : "light";
+    return stored === "dark" ? Theme.Dark : Theme.Light;
   });
 
   useEffect(() => {
-    document.body.classList.toggle("dark-theme", theme === "dark");
+    document.body.classList.toggle("dark-theme", theme === Theme.Dark);
     localStorage.setItem("kanban-theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+  const toggleTheme = () =>
+    setTheme((t) => (t === Theme.Light ? Theme.Dark : Theme.Light));
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

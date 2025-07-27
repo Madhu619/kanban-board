@@ -8,7 +8,7 @@ const mockIssues = [
     id: "1",
     title: "Test Issue",
     status: "backlog",
-    assignee: "Alice",
+    assignee: "Samanvi",
     severity: 2,
     createdAt: new Date("2025-07-20T10:00:00Z"),
     updatedAt: new Date("2025-07-20T10:00:00Z"),

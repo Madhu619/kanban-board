@@ -81,7 +81,7 @@ const Home: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 className="home-input"
-                placeholder="madhu, alice, bob, guest..."
+                placeholder="madhu, samanvi, sony, guest..."
                 autoComplete="off"
               />
               <SubmitButton type="submit">Enter</SubmitButton>
